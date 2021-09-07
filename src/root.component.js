@@ -18,7 +18,7 @@ export default function Root() {
 	const inspector = () => {
 		const inspectStorage = JSON.parse(localStorage.getItem('inspect'))
 		localStorage.setItem('inspect', !inspectStorage)
-		location.reload();
+		location.replace('/');
 	}
 
 	return (
