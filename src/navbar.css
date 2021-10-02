@@ -1,9 +1,8 @@
 .navbar{
 	position: relative;
 	display: flex;
-	align-items: center;
+	align-items: stretch;
 	justify-content: center;
-	flex-wrap: wrap;
 	margin: 3rem 1.5rem;
 	padding: 1.5rem 1rem;
 	border-bottom: .1rem solid var(--dark-gray);
@@ -25,8 +24,17 @@
 	color: var(--react);
 }
 
+.navbar__item--inspect{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
 .navbar__link{
-	display: inline-block;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
 	padding: 1rem;
 	margin: 0 .5rem;
 	background-color: rgba(255, 255, 255, .05);

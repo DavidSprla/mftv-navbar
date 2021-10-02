@@ -4,21 +4,40 @@ import "./navbar.css"
 
 export default function Root() {
 
-	const [inspect, setInspect] = useState(false); 
+	const [inspect, setInspect] = useState(false)
+	const [favourite, setFavourite] = useState(0)
+
+	const handleInspect = (event) => {
+		setInspect(event.detail)
+	}
+
+	const handleFavourite = (event) => {
+		setFavourite(event.detail)
+	}
 
 	useEffect(() => {
-		if(!localStorage.getItem('inspect')){
-			localStorage.setItem('inspect', false)
-		}
+		window.addEventListener('inspectEvent', handleInspect)
+		window.addEventListener('favouriteEvent', handleFavourite)
 
-		const inspectStorage = JSON.parse(localStorage.getItem('inspect'))
+		const inspectStorage = JSON.parse(localStorage.getItem('inspect')) || false
 		setInspect(inspectStorage)
-	}, []);
 
-	const inspector = () => {
-		const inspectStorage = JSON.parse(localStorage.getItem('inspect'))
-		localStorage.setItem('inspect', !inspectStorage)
-		location.reload();
+		const moviesStorage = JSON.parse(localStorage.getItem('movies')) || []
+		setFavourite(moviesStorage.length)
+
+		return () => {
+			window.removeEventListener('inspectEvent', handleInspect)
+			window.removeEventListener('favouriteEvent', handleFavourite)
+		}
+	}, [handleInspect, handleFavourite])
+
+	const handleInspectBtn = () => {
+		const inspectCustomEvent = new CustomEvent('inspectEvent', {
+			detail: !inspect
+		})
+		window.dispatchEvent(inspectCustomEvent)
+
+		localStorage.setItem('inspect', !inspect)
 	}
 
 	return (
@@ -31,11 +50,11 @@ export default function Root() {
 				</div>
 				<div className="navbar__item">
 					<NavLink to="/favourite" className="navbar__link" activeClassName="navbar__link--active">
-						Favourite
+						Favourite ({favourite})
 					</NavLink>
 				</div>
-				<div className="navbar__item">
-					<button type="button" title="Framework inspector" className={`navbar__inspect ${inspect ? 'navbar__inspect--active' : ''}`} onClick={inspector}>
+				<div className="navbar__item navbar__item--inspect">
+					<button type="button" title="Framework inspector" className={`navbar__inspect ${inspect ? 'navbar__inspect--active' : ''}`} onClick={handleInspectBtn}>
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310 310">
 							<path d="M175.682,80.547c-7.981-2.217-16.249,2.456-18.467,10.438l-33.334,120c-2.217,7.982,2.456,16.25,10.438,18.467
 								c1.343,0.373,2.694,0.551,4.023,0.551c6.57,0,12.6-4.35,14.444-10.989l33.334-120C188.337,91.033,183.664,82.764,175.682,80.547z"/>
